@@ -1,4 +1,4 @@
-.class
-.swp
-.project
-.metadata
+*.class
+*.swp
+*.project
+*.metadata
