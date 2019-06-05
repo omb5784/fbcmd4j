@@ -1,1 +1,4 @@
-/bin/
+*.class
+*.swp
+*.project
+*.metadata
