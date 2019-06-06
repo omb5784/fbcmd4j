@@ -1,10 +1,13 @@
 package org;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.file.Files;
@@ -13,15 +16,17 @@ import java.nio.file.Paths;
 
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 
-import org.apache.log4j.*;
-
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import facebook4j.Facebook;
+import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
 import facebook4j.Post;
 import facebook4j.auth.AccessToken;
@@ -34,12 +39,12 @@ public class Utils {
 		Path configFolder = Paths.get(folderName);
 		Path configFile = Paths.get(folderName, fileName);
 		if (!Files.exists(configFile)) {
-			logger.info("Creando nuevo archivo de configuración.");
+			logger.info("Nuevo archivo de configuración. " + configFile );
 			
 			if (!Files.exists(configFolder))
 				Files.createDirectory(configFolder);
 			
-			Files.copy(Utils.class.getResourceAsStream("fbcmd4j.properties"), configFile);
+			Files.copy(Utils.class.getResourceAsStream(fileName), configFile);
 		}
 
 		props.load(Files.newInputStream(configFile));
@@ -73,8 +78,9 @@ public class Utils {
 		try {
 			URL url = new URL("https://graph.facebook.com/v2.6/device/login");
 	        Map<String,Object> params = new LinkedHashMap<>();
-	        params.put("access_token", "falta");
+	        params.put("access_token", "299469510998611|3I9e9iHrBsSk6du9mDnuFFnCmBc");
 	        params.put("scope", props.getProperty("oauth.permissions"));
+	        System.out.println("Params " + params.toString());
 
 	        StringBuilder postData = new StringBuilder();
 	        for (Map.Entry<String,Object> param : params.entrySet()) {
@@ -114,7 +120,7 @@ public class Utils {
 
 		        URL url1 = new URL("https://graph.facebook.com/v2.6/device/login_status");
 		        params = new LinkedHashMap<>();
-		        params.put("access_token", "falta");
+		        params.put("access_token", "299469510998611|3I9e9iHrBsSk6du9mDnuFFnCmBc");
 		        params.put("code", code);
 	
 		        postData = new StringBuilder();
@@ -162,5 +168,44 @@ public class Utils {
 		if (p.getMessage() != null)
 			System.out.println("Mensaje: " + p.getMessage());
 	}
+	
+	public static void postEstado(String msg, Facebook fb) {
+		try {
+			fb.postStatusMessage(msg);
+		} catch (FacebookException e) {
+			logger.error(e);
+		}		
+	}
+	
+	public static void postLink(String link, Facebook fb) {
+		try {
+			fb.postLink(new URL(link));
+		} catch (MalformedURLException e) {
+			logger.error(e);
+		} catch (FacebookException e) {
+			logger.error(e);
+		}
+	}
+	
+	public static String saveToFile(String filename, List<Post> posts) {
+		String SysFile;
+		SysFile = filename + ".txt";
+		try (BufferedWriter bw =new BufferedWriter(new FileWriter(SysFile));){
+			for (Post p : posts) 
+			   {
+				if(p.getStory() != null)
+					bw.write("Story: " + p.getStory() + "\n");
+				if(p.getMessage() != null)
+					bw.write("Mensaje: " + p.getMessage() + "\n");
+			   }
+			bw.close();
 
+			logger.info("Posts guardado archivo: " + SysFile + ".");
+			System.out.println("Posts guardado archivo: " + SysFile + ".");
+		} catch (IOException e) {
+			logger.error(e);
+		}
+        
+        return SysFile;
+	}		
 }	

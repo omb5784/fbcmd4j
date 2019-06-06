@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Properties;
 import java.util.Scanner;
-
-import org.apache.log4j.*;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.Post;
@@ -51,7 +51,7 @@ public class Main {
 						props = Utils.loadConfigFile(CONFIG_DIR, CONFIG_FILE);
 						break;
 					case 1:
-						System.out.println("NewsFeed:");
+						System.out.println("Listar NewsFeed:");
 						ResponseList<Post> NewsFeed = fb.getFeed();
 						for (Post news : NewsFeed) {
 							Utils.printPosts(news);
@@ -59,28 +59,34 @@ public class Main {
 //						SaveFile("NewsFeed", newsFeed, scan);
 						break;
 					case 2:
-						System.out.println("Wall:");
+						System.out.println("Listar Wall:");
 						ResponseList<Post> wall = fb.getPosts();
 						for (Post Wall : wall) {
 							Utils.printPosts(Wall);
 						}	
 						break;
 					case 3:
-
+						System.out.println("Comparta su estado: ");
+						String estado = scanner.nextLine();
+						Utils.postEstado(estado, fb);
 						break;
 					case 4:
-
+						System.out.println("Comparta un link: ");
+						String link = scanner.nextLine();
+						Utils.postLink(link, fb);
 						break;
 					case 5:
-
+						System.out.println("Saliendo de la Aplicación");
+						System.exit(0);
 						break;
 					default:
+						logger.error("La Opción no es válida...");
 						break;
 					}
 				} catch (InputMismatchException ex)
 				        {
 							System.out.println("Ocurrió un errror, consulte el log.");
-							logger.error("La opción no es válida. %s. \n", ex.getClass());
+							logger.error("La opción no es válida. %s. \n", ex);
 							scanner.next();
 				        } catch (FacebookException ex)
 								{
