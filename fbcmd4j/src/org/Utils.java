@@ -186,7 +186,7 @@ public class Utils {
 			logger.error(e);
 		}
 	}
-	
+
 	public static String saveToFile(String filename, List<Post> posts) {
 		String SysFile;
 		SysFile = filename + ".txt";

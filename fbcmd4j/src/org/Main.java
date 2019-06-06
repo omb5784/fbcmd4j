@@ -1,5 +1,4 @@
 package org;
-
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Properties;
@@ -56,14 +55,15 @@ public class Main {
 						for (Post news : NewsFeed) {
 							Utils.printPosts(news);
 						}
-//						SaveFile("NewsFeed", newsFeed, scan);
+						Utils.saveToFile("NewsFeed", NewsFeed);
 						break;
 					case 2:
 						System.out.println("Listar Wall:");
 						ResponseList<Post> wall = fb.getPosts();
 						for (Post Wall : wall) {
 							Utils.printPosts(Wall);
-						}	
+						}
+						Utils.saveToFile("NewsFeed", wall);
 						break;
 					case 3:
 						System.out.println("Comparta su estado: ");
