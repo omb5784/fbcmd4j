@@ -7,3 +7,4 @@ Relevant information for error recovery can be found on the Facebook Developers 
 	https://developers.facebook.com/docs/graph-api/using-graph-api/#errors
 
 FacebookException{statusCode=400, errorType='OAuthException', errorMessage='Invalid OAuth access token.', errorCode=190, errorSubcode=-1, version=2.4.13}
+2019-06-06 12:56:12.334 [main] ERROR org.Utils - java.io.IOException: Server returned HTTP response code: 400 for URL: https://graph.facebook.com/v2.6/device/login
